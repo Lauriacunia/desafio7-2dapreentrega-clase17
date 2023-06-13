@@ -51,3 +51,9 @@ npm install dotenv --save
 ```
  npm i cors
 ```
+
+- Pagination
+
+```
+ npm i mongoose-paginate-v2
+```
