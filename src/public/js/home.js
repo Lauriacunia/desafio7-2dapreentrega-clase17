@@ -1,13 +1,4 @@
 console.log("home.js loaded");
-let products = [];
-let hasNextPage = false;
-let hasPrevPage = false;
-let limit = 5;
-let nextPage = null;
-let page = 1;
-let prevPage = null;
-let totalDocs = null;
-let totalPages = null;
 
 const createCart = () => {
   console.log("🛒 Creando tu carrito...");
@@ -30,14 +21,29 @@ const createCart = () => {
   }
 };
 
-const getAllProducts = (limit = 5, page = 1, sort = null, query = "") => {
-  fetch(
-    `/products?limit=${limit}&page=${page}&sort=${sort}&query[title]=${query}`
-  )
+const getAllProducts = (limit, page, sort, query) => {
+  console.log("🛒 Obteniendo todos los productos...");
+  const myCartId = JSON.parse(localStorage.getItem("myCartId"));
+  console.log("myCartId", myCartId);
+  let urlBase = `/products`;
+  if (limit) {
+    urlBase += `?limit=${limit}`;
+  }
+  if (page) {
+    urlBase += `&page=${page}`;
+  }
+  if (sort) {
+    urlBase += `&sort=${sort}`;
+  }
+  if (query) {
+    urlBase += `&query[title]=${query}`;
+  }
+  console.log("urlBase", urlBase);
+  fetch(`${urlBase}`)
     .then((res) => res.json())
     .then((data) => {
       console.log(data);
-      products = data.payload.docs;
+      const products = data.payload.docs;
       renderProducts(products);
       renderPagination(data.payload);
     })
@@ -81,16 +87,14 @@ function renderProducts(products) {
   });
 }
 function renderPagination(payload) {
-  console.log(payload);
-  hasNextPage = payload.hasNextPage;
-  hasPrevPage = payload.hasPrevPage;
-  limit = payload.limit;
-  nextPage = payload.nextPage;
-  console.log(nextPage);
-  page = payload.page;
-  prevPage = payload.prevPage;
-  totalDocs = payload.totalDocs;
-  totalPages = payload.totalPages;
+  console.log("render pagination", payload);
+  let hasNextPage = payload.hasNextPage;
+  let hasPrevPage = payload.hasPrevPage;
+  let limit = payload.limit;
+  let nextPage = payload.nextPage;
+  let page = payload.page;
+  let prevPage = payload.prevPage;
+  let totalPages = payload.totalPages;
 
   const paginationContainer = document.getElementById("pagination-container");
   paginationContainer.innerHTML = "";
@@ -133,7 +137,6 @@ const addToCart = (id) => {
 };
 
 const deleteProduct = (id) => {
-  console.log("delete", id);
   fetch(`/products/${id}`, {
     method: "DELETE",
   })
@@ -153,6 +156,6 @@ const goToCart = () => {
 
 const init = () => {
   createCart();
-  getAllProducts();
+  getAllProducts(5, 1, null, null);
 };
 init();
