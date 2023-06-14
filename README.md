@@ -15,6 +15,14 @@
 
 [Ver documentación de la API](https://documenter.getpostman.com/view/13362314/2s93sf2WXA)
 
+### Icons
+
+https://ionic.io/ionicons/
+
+### Styles
+
+https://bulma.io/
+
 ### Dependencias:
 
 - Express

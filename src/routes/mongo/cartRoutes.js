@@ -71,6 +71,28 @@ router.get("/:idCart/products", async (req, res) => {
     });
   }
 });
+// vista de detalle de un carrito
+router.get("/:idCart", async (req, res) => {
+  try {
+    const idCart = req.params.idCart;
+    console.log("idCart", idCart);
+    const cart = await db.getOne(idCart);
+    const products = cart.products;
+    console.log("products", products);
+    cart
+      ? res.render("myCart", { products })
+      : res.status(404).json({
+          status: "error",
+          message: "Sorry, no cart found by id: " + idCart,
+          payload: {},
+        });
+  } catch (err) {
+    res.status(err.status || 500).json({
+      status: "error",
+      payload: err.message,
+    });
+  }
+});
 
 //agregar productos a un carrito
 router.put("/:idCart/products/:idProduct", async (req, res) => {

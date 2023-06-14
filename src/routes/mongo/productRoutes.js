@@ -72,7 +72,8 @@ router.post("/", validateRequest, async (req, res) => {
   try {
     const newProduct = req.body;
     // validate code not repeated
-    const allProducts = await db.getAll();
+    const response = await db.getAll();
+    const allProducts = response.docs;
     const product = allProducts.find(
       (product) => product.code == newProduct.code
     );
